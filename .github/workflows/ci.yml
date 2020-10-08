@@ -39,15 +39,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: restore dependencies
+        run: npm ci
+      - run: npm i -g jest
+
       - name: Download lib from build job
         uses: actions/download-artifact@v2
         with:
           name: lib
           path: ./lib
-
-      - name: restore dependencies
-        run: npm ci
-      - run: npm i -g jest
 
       # run tests
       - name: 🧪 run unit tests
