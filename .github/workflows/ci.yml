@@ -1,10 +1,8 @@
 name: 'CI'
 on:
-  pull_request:
   push:
-    branches:
-      - main
-      - 'releases/*'
+  pull_request:
+    types: [ opened ]
 
 jobs:
   build:
@@ -18,6 +16,7 @@ jobs:
 
       - name: restore dependencies
         run: npm ci
+      - run: npm i -g concurrently
 
       - name: 🧱 build typescript src
         run: npm run build
@@ -25,17 +24,32 @@ jobs:
       - name: 👓 format + lint
         run: npm run check-all
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib
+          path: ./lib
+
   test:
     name: 🧪 test
 
     runs-on: ubuntu-latest
     container: docker://node:latest
 
+    needs: build
+
     steps:
       - uses: actions/checkout@v2
 
       - name: restore dependencies
         run: npm ci
+      - run: npm i -g jest
+
+      - name: Download lib from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: lib
+          path: ./lib
 
       # run tests
       - name: 🧪 run unit tests
