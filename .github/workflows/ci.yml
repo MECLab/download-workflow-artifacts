@@ -1,0 +1,46 @@
+name: 'CI'
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build:
+    name: 🧱 build
+
+    runs-on: ubuntu-latest
+    container: docker://node:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: restore dependencies
+        run: npm ci
+
+      - name: 🧱 build typescript src
+        run: npm run build
+
+      - name: 👓 format + lint
+        run: npm run check-all
+
+  test:
+    name: 🧪 test
+
+    runs-on: ubuntu-latest
+    container: docker://node:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: restore dependencies
+        run: npm ci
+
+      # run tests
+      - name: 🧪 run unit tests
+        run: npm test
+
+      - uses: ./
+        with:
+          milliseconds: 1000
