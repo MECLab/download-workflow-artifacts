@@ -24,6 +24,12 @@ jobs:
       - name: 👓 format + lint
         run: npm run check-all
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib
+          path: ./lib
+
   test:
     name: 🧪 test
 
@@ -32,6 +38,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Download lib from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: lib
+          path: ./lib
 
       - name: restore dependencies
         run: npm ci
