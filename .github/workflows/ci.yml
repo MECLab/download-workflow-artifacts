@@ -35,6 +35,7 @@ jobs:
 
       - name: restore dependencies
         run: npm ci
+      - run: npm i -g jest
 
       # run tests
       - name: 🧪 run unit tests
