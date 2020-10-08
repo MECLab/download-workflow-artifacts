@@ -16,6 +16,7 @@ jobs:
 
       - name: restore dependencies
         run: npm ci
+      - run: npm i -g concurrently
 
       - name: 🧱 build typescript src
         run: npm run build
